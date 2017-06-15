@@ -42,5 +42,48 @@ CHIP ALU {
         ng; // 1 if (out < 0),  0 otherwise
 
     PARTS:
-   // Put you code here:
+
+    // zero x
+    Not(in=zx, out=zeroOut);
+    And16(a=x, b[0]=zeroOut, b[1]=zeroOut, b[2]=zeroOut, b[3]=zeroOut,b[4]=zeroOut,b[5]=zeroOut,b[6]=zeroOut,b[7]=zeroOut,b[8]=zeroOut,b[9]=zeroOut,b[10]=zeroOut,b[11]=zeroOut,b[12]=zeroOut,b[13]=zeroOut,b[14]=zeroOut,b[15]=zeroOut, out=zeroX);
+
+    // negate x
+    Not16(in=zeroX, out=negX);
+    Mux16(a=zeroX, b=negX, sel = nx, out = outX);
+
+    // zero y
+    Not(in=zy, out=zeroOutY);
+    And16(a=y, b[0]=zeroOutY,b[1]=zeroOutY,b[2]=zeroOutY,b[3]=zeroOutY,b[4]=zeroOutY,b[5]=zeroOutY,b[6]=zeroOutY,b[7]=zeroOutY,b[8]=zeroOutY,b[9]=zeroOutY,b[10]=zeroOutY,b[11]=zeroOutY,b[12]=zeroOutY,b[13]=zeroOutY,b[14]=zeroOutY,b[15]=zeroOutY, out=zeroY);
+
+    // negate y
+    Not16(in=zeroY, out=negY);
+    Mux16(a=zeroY, b=negY, sel=ny, out=outY);
+
+    // function code
+    Add16(a=outX, b=outY, out=outSum);
+    And16(a=outX, b=outY, out=outAnd);
+
+    Mux16(a=outAnd, b=outSum, sel=f, out = outFun);
+
+    // netgate out
+
+    Not16(in=outFun, out = negOutFun);
+    Mux16(a=outFun, b=negOutFun, sel = no, out= out1,out[15]=isNeg, out[0..7] = out11, out[8..15]=out12);
+    And16(a[0..15]=false, b=out1, out=out);
+
+    
+    // set zr
+    Or8Way(in = out11, out=or1);
+    Or8Way(in = out12, out=or2);
+
+    Or(a=or1, b=or2, out=or3);
+    Not(in=or3, out=zr);
+
+    // set ng
+    And(a=isNeg,b=true, out=ng);
+
+
+
+
+
 }
