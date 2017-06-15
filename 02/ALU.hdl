@@ -68,8 +68,8 @@ CHIP ALU {
     // netgate out
 
     Not16(in=outFun, out = negOutFun);
-    Mux16(a=outFun, b=negOutFun, sel = no, out= out1,out[15]=isNeg, out[0..7] = out11, out[8..15]=out12);
-    And16(a[0..15]=false, b=out1, out=out);
+    Mux16(a=outFun, b=negOutFun, sel = no, out= out,out[15]=isNeg, out[0..7] = out11, out[8..15]=out12);
+    //And16(a[0..15]=false, b=out1, out=out);
 
     
     // set zr
